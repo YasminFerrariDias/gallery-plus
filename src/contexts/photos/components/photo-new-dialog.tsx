@@ -7,27 +7,26 @@ import InputSingleFile from "../../../components/input-single-file";
 import InputText from "../../../components/input-text";
 import Skeleton from "../../../components/skeleton";
 import Text from "../../../components/text";
-import type { Album } from "../../albums/models/album";
 import { DialogDescription } from "@radix-ui/react-dialog";
+import useAlbums from "../../albums/hooks/use-albums";
+import type React from "react";
 
 interface PhotoNewDialogProps {
-  trigger: React.ReactNode
+  trigger: React.ReactNode;
 }
 
 export default function PhotoNewDialog({ trigger }: PhotoNewDialogProps) {
-  const form = useForm()
-
-  // Apenas mock
-  const isLoadingAlbum = false;
-  const albums: Album[] = [
-    { id: " 3421", title: "Album 1" },
-    { id: " 3426", title: "Album 2" },
-    { id: " 3341", title: "Album 3" }
-  ]
+  const form = useForm();
+  const { albums, isLoadingAlbums } = useAlbums();
 
   return (
     <Dialog>
-      <DialogTrigger asChild>{trigger}</DialogTrigger>
+      <DialogTrigger asChild>
+        {trigger && typeof trigger === 'object' && 'props' in trigger
+          ? trigger
+          : <span>{trigger}</span>}
+      </DialogTrigger>
+      
       <DialogContent>
         <DialogHeader>Adicionar foto</DialogHeader>
 
@@ -62,7 +61,7 @@ export default function PhotoNewDialog({ trigger }: PhotoNewDialogProps) {
             <Text variant="label-small">Selecionar álbuns</Text>
 
             <div className="flex flex-wrap gap-3">
-              {!isLoadingAlbum && albums.length > 0 && albums.map((album) => (
+              {!isLoadingAlbums && albums.length > 0 && albums.map((album) => (
                 <Button
                   key={album.id}
                   variant="ghost"
@@ -73,7 +72,7 @@ export default function PhotoNewDialog({ trigger }: PhotoNewDialogProps) {
                 </Button>
               ))}
 
-              {isLoadingAlbum && Array.from({ length: 5 }).map((_, index) => (
+              {isLoadingAlbums && Array.from({ length: 5 }).map((_, index) => (
                 <Skeleton key={`album-loading-${index}`} className="w-20 h-7" />
               ))}
             </div>

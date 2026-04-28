@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router";
-import { QueryClient, QueryClienteProvider } from "@tanstack/react-query"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import PageComponents from "./pages/page-components";
 import LayoutMain from "./pages/layout-main";
 import PageHome from "./pages/page-home";
@@ -9,7 +9,7 @@ const queryClient = new QueryClient()
 
 export default function App() {
 	return (
-		<QueryClienteProvider client={queryClient}>
+		<QueryClientProvider client={queryClient}>
 			<BrowserRouter>
 				<Routes>
 					<Route element={<LayoutMain />}>
@@ -19,6 +19,6 @@ export default function App() {
 					</Route>
 				</Routes>
 			</BrowserRouter>
-		</QueryClienteProvider>
+		</QueryClientProvider>
 	);
 }

@@ -46,8 +46,8 @@ export function DialogContent({
       <DialogPrimitive.Content
         ref={ref}
         className={cn(`
-          fixed left-[50%] top-[50%] w-full max-w-[32rem]
-          z-[60] translate-x-[-50%] translate-y-[-50%]
+          fixed left-[50%] top-[50%] w-full max-w-lg
+          z-60 translate-x-[-50%] translate-y-[-50%]
           data-[state=open]:animate-in
           data-[state=open]:fade-in-0 
           data-[state=open]:slide-in-from-bottom-[48%]
