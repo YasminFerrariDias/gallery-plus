@@ -1,5 +1,6 @@
 import Container from "../components/container";
 import PhotoWidget from "../contexts/photos/components/photo-widget";
+import type { Photo } from "../contexts/photos/models/foto";
 
 export default function PageHome() {
   return (
@@ -16,6 +17,10 @@ export default function PageHome() {
               { id: " 3341", title: "Album 3" }
             ]
           }}
+        />
+        <PhotoWidget
+          photo={{} as Photo}
+          loading
         />
       </div>
     </Container>
