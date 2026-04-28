@@ -6,22 +6,25 @@ import Skeleton from "../../../components/skeleton";
 import Text from "../../../components/text";
 import type { Photo } from "../models/foto";
 
-
 interface PhotoWidgetProps {
   photo: Photo;
   loading?: boolean;
 }
 
 export default function PhotoWidget({ photo, loading }: PhotoWidgetProps) {
+  if (!photo?.imageId) {
+    return null
+  }
+
   return <div className="flex flex-col gap-4">
     {!loading ? (
       <ImagePreview
-        src={`/images/${photo.imageId}`}
+        src={`${import.meta.env.VITE_IMAGES_URL}/${photo.imageId}`}
         title={photo.title}
         imageClassName="w-[10.875rem] h-[10.875rem] rounded-lg"
       />
     ) : (
-      <Skeleton className="w-[10.875rem] h-[10.875rem] rounded-lg" />
+      <Skeleton className="w-43.5 h-43.5 rounded-lg" />
     )}
 
     <div className="flex flex-col gap-2">
@@ -31,7 +34,7 @@ export default function PhotoWidget({ photo, loading }: PhotoWidgetProps) {
         <Skeleton className="w-full h-6" />
       )}
 
-      <div className="flex gap-1 min-h-[1.375rem]">
+      <div className="flex gap-1 min-h-5.5">
         {!loading ? (
           <>
             {photo.albums.slice(0, 1).map(album => (
@@ -63,7 +66,7 @@ export default function PhotoWidget({ photo, loading }: PhotoWidgetProps) {
           Detalhes da imagem
         </Text>
       </Link>
-    ):(
+    ) : (
       <Skeleton className="w-full h-10" />
     )}
   </div>
