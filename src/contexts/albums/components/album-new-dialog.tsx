@@ -3,7 +3,6 @@ import { Dialog, DialogBody, DialogHeader, DialogContent, DialogTrigger, DialogF
 import Button from "../../../components/button";
 import InputText from "../../../components/input-text";
 import Text from "../../../components/text";
-import type { Photo } from "../../photos/models/foto";
 import SelectCheckboxIllustration from "../../../assets/images/select-checkbox.svg?react"
 import { DialogDescription } from "@radix-ui/react-dialog";
 import Skeleton from "../../../components/skeleton";
@@ -46,7 +45,7 @@ export default function AlbumNewDialog({ trigger }: AlbumNewDialogProps) {
                 {photos.map(photo => (
                   <PhotoImageSelectable
                     key={photo.id}
-                    src={`${import.meta.env.VITE_API_URL}/images/${photo.imageId}`}
+                    src={`${import.meta.env.VITE_IMAGES_URL}/${photo.imageId}`}
                     title={photo.title}
                     imageClassName="w-20 h-20"
                     onSelectImage={(selected) => handleTogglePhoto(selected, photo.id)}
