@@ -7,7 +7,6 @@ import InputSingleFile from "../../../components/input-single-file";
 import InputText from "../../../components/input-text";
 import Skeleton from "../../../components/skeleton";
 import Text from "../../../components/text";
-import { DialogDescription } from "@radix-ui/react-dialog";
 import useAlbums from "../../albums/hooks/use-albums";
 import React from "react";
 import { photoNewFormSchema, type PhotoNewFormSchema } from "../schemas";
@@ -72,9 +71,7 @@ export default function PhotoNewDialog({ trigger }: PhotoNewDialogProps) {
         <form onSubmit={form.handleSubmit(handleSubmit)}>
           <DialogHeader>Adicionar foto</DialogHeader>
 
-          <DialogDescription>
-            Preencha os dados para cadastrar uma nova foto.
-          </DialogDescription>
+        
 
           <DialogBody className="flex flex-col gap-5">
             <InputText

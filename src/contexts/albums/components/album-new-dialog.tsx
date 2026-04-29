@@ -4,7 +4,6 @@ import Button from "../../../components/button";
 import InputText from "../../../components/input-text";
 import Text from "../../../components/text";
 import SelectCheckboxIllustration from "../../../assets/images/select-checkbox.svg?react"
-import { DialogDescription } from "@radix-ui/react-dialog";
 import Skeleton from "../../../components/skeleton";
 import PhotoImageSelectable from "../../photos/components/photo-image-selectable";
 import usePhotos from "../../photos/hooks/use-photos";
@@ -58,10 +57,6 @@ export default function AlbumNewDialog({ trigger }: AlbumNewDialogProps) {
       <DialogContent>
         <form onSubmit={form.handleSubmit(handleSubmit)}>
           <DialogHeader>Criar álbum</DialogHeader>
-
-          <DialogDescription>
-            Preencha os dados para criar um novo álbum.
-          </DialogDescription>
 
           <DialogBody className="flex flex-col gap-5">
             <InputText
