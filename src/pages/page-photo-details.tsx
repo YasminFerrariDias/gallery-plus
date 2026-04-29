@@ -14,24 +14,16 @@ import PhotoEditDialog from "../contexts/photos/components/photo-edit-dialog";
 
 export default function PagePhotoDetails() {
   const { id } = useParams();
-  const { photo, previousPhotoId, nextPhotoId, isLoadingPhoto, deletePhoto, /*editPhoto*/ } = usePhoto(id)
+  const { photo, previousPhotoId, nextPhotoId, isLoadingPhoto, deletePhoto } = usePhoto(id)
   const { albums, isLoadingAlbums } = useAlbums();
   const [isDeletingPhoto, setIsDeletingPhoto] = React.useTransition()
-  const [isEditingPhoto, /*setIsEditingPhoto*/] = React.useTransition()
+  const [isEditingPhoto] = React.useTransition()
 
   function handleDeletePhoto() {
     setIsDeletingPhoto(async () => {
       await deletePhoto(photo!.id);
     })
   }
-
-  /*function handleEditPhoto() {
-    setIsEditingPhoto(async () => {
-      await editPhoto(photo!.id, {
-        title: "Novo título da foto",
-      });
-    })
-  }*/
 
   if (!isLoadingAlbums && !photo) {
     return <div>Foto não encontra!</div>
@@ -82,7 +74,7 @@ export default function PagePhotoDetails() {
                   <Button
                     variant="edit"
                     disabled={isEditingPhoto}>
-                    {isEditingPhoto ? <></> : "Editar"}
+                    {isEditingPhoto ? "Editando..." : "Editar"}
                   </Button>
                 }
               />
