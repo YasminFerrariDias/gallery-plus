@@ -9,7 +9,7 @@ import Skeleton from "../../../components/skeleton";
 import Text from "../../../components/text";
 import { DialogDescription } from "@radix-ui/react-dialog";
 import useAlbums from "../../albums/hooks/use-albums";
-import type React from "react";
+import React from "react";
 import { photoNewFormSchema, type PhotoNewFormSchema } from "../schemas";
 import { zodResolver } from "@hookform/resolvers/zod"
 
@@ -18,6 +18,7 @@ interface PhotoNewDialogProps {
 }
 
 export default function PhotoNewDialog({ trigger }: PhotoNewDialogProps) {
+  const [modalOpen, setModalOpen] = React.useState(false)
   const form = useForm<PhotoNewFormSchema>({
     // ele vai resolver o formulário, com base no schema 
     resolver: zodResolver(photoNewFormSchema)
@@ -28,12 +29,18 @@ export default function PhotoNewDialog({ trigger }: PhotoNewDialogProps) {
   const file = form.watch("file");
   const fileSource = file?.[0] ? URL.createObjectURL(file[0]) : undefined;
 
+  React.useEffect(() => {
+    if (!modalOpen) {
+      form.reset()
+    }
+  }, [modalOpen, form])
+
   function handleSubmit(payload: PhotoNewFormSchema) {
     console.log(payload)
   }
 
   return (
-    <Dialog>
+    <Dialog open={modalOpen} onOpenChange={setModalOpen}>
       <DialogTrigger asChild>
         {trigger && typeof trigger === 'object' && 'props' in trigger
           ? trigger
