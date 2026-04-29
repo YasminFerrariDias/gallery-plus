@@ -55,14 +55,16 @@ export const inputTextIconVariants = tv({
 
 export default function InputText({ size, disabled, className, icon, error, ...props }: InputTextProps) {
   return (
-      <div className={inputTextContainerVariants({className})}>
-      <div className={inputTextWrapperVariants({size, disabled})}>
-        {icon && <Icon svg={icon} className={inputTextIconVariants({size})} />}
+    <div className={inputTextContainerVariants({ className })}>
+      <div className={inputTextWrapperVariants({ size, disabled })}>
+        {icon && <Icon svg={icon} className={inputTextIconVariants({ size })} />}
         <input className={inputTextVariants()} disabled={disabled as boolean} {...props} />
       </div>
-      {error && <Text variant="label-small" className="text-accent-red">
-        {error}
-      </Text>}
+      {error && (
+        <Text variant="label-small" className="text-accent-red">
+          {error}
+        </Text>
+      )}
     </div>
   )
 }
