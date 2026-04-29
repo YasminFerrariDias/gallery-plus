@@ -70,9 +70,7 @@ export default function PhotoNewDialog({ trigger }: PhotoNewDialogProps) {
       <DialogContent>
         <form onSubmit={form.handleSubmit(handleSubmit)}>
           <DialogHeader>Adicionar foto</DialogHeader>
-
-        
-
+          
           <DialogBody className="flex flex-col gap-5">
             <InputText
               placeholder="Adicione um título"

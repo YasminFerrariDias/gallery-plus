@@ -17,7 +17,7 @@ const start = async () => {
 
 	await fastify.register(import("@fastify/cors"), {
 		origin: "*",
-		methods: ["GET", "PUT", "POST", "DELETE", "OPTIONS"],
+		methods: ["GET", "PUT", "POST", 'PATCH', "DELETE", "OPTIONS"],
 		allowedHeaders: ["Content-Type", "Authorization"],
 	});
 

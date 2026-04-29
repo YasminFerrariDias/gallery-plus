@@ -1,7 +1,7 @@
 import React from "react";
 import Icon from "./icon";
 import Text from "./text";
-import {tv, type VariantProps} from "tailwind-variants";
+import { tv, type VariantProps } from "tailwind-variants";
 import SpinnerIcon from "../assets/icons/spinner.svg?react";
 import cx from "classnames";
 
@@ -16,6 +16,7 @@ export const buttonVariants = tv({
 					bg-transparent border border-solid border-border-primary 
 				text-accent-paragraph hover:border-background-secondary
 				`,
+			edit: "bg-background-secondary hover:bg-background-tertiary",
 		},
 		size: {
 			sm: "h-7 py-1 px-3",
@@ -43,6 +44,7 @@ export const buttonTextVariants = tv({
 			secondary: "text-label",
 			destructive: "text-accent-red",
 			ghost: "text-accent-paragraph",
+			edit: "text-accent-brand-light",
 		},
 		size: {
 			sm: "text-sm",
@@ -62,6 +64,7 @@ export const buttonIconVariants = tv({
 			secondary: "fill-label",
 			destructive: "fill-accent-red",
 			ghost: "fill-accent-paragraph",
+			edit: "fill-accent-brand-light",
 		},
 		size: {
 			sm: "w-4 h-4",
@@ -79,7 +82,7 @@ export const buttonIconVariants = tv({
 
 interface ButtonProps
 	extends Omit<React.ComponentProps<"button">, "size" | "disabled">,
-		VariantProps<typeof buttonVariants> {
+	VariantProps<typeof buttonVariants> {
 	icon?: React.ComponentProps<typeof Icon>["svg"];
 	handling?: boolean;
 }
@@ -115,7 +118,7 @@ export default function Button({
 		>
 			<Text
 				variant="label-medium"
-				className={buttonTextVariants({variant, size})}
+				className={buttonTextVariants({ variant, size })}
 			>
 				{children}
 			</Text>
@@ -123,7 +126,7 @@ export default function Button({
 				<Icon
 					svg={handling ? SpinnerIcon : icon!}
 					animate={handling}
-					className={buttonIconVariants({variant, size, handling})}
+					className={buttonIconVariants({ variant, size, handling })}
 				/>
 			)}
 		</button>

@@ -65,6 +65,27 @@ export default function usePhoto(id?: string) {
     }
   }
 
+  async function editPhoto(photoId: string, data: { title?: string }) {
+    try {
+      await api.patch(`/photos/${photoId}`, data)
+      queryClient.setQueryData<PhotoDetailsResponse>(
+        ["photo", photoId],
+        (oldData) => {
+          if (!oldData) return oldData
+          return {
+            ...oldData,
+            ...data
+          }
+        }
+      )
+
+      toast.success("Foto editada com sucesso")
+    } catch (error) {
+      toast.error("Erro ao editar foto");
+      throw error;
+    }
+  }
+
   return {
     photo: data,
     nextPhotoId: data?.nextPhotoId,
@@ -72,5 +93,6 @@ export default function usePhoto(id?: string) {
     isLoadingPhoto: isLoading,
     createPhoto,
     deletePhoto,
+    editPhoto,
   }
 }

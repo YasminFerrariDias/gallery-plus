@@ -10,18 +10,28 @@ import AlbumsListSelectable from "../contexts/albums/components/albums-list-sele
 import useAlbums from "../contexts/albums/hooks/use-albums";
 import usePhoto from "../contexts/photos/hooks/use-photo";
 import type { Photo } from "../contexts/photos/models/photo";
+import PhotoEditDialog from "../contexts/photos/components/photo-edit-dialog";
 
 export default function PagePhotoDetails() {
   const { id } = useParams();
-  const { photo, previousPhotoId, nextPhotoId, isLoadingPhoto, deletePhoto } = usePhoto(id)
+  const { photo, previousPhotoId, nextPhotoId, isLoadingPhoto, deletePhoto, /*editPhoto*/ } = usePhoto(id)
   const { albums, isLoadingAlbums } = useAlbums();
   const [isDeletingPhoto, setIsDeletingPhoto] = React.useTransition()
+  const [isEditingPhoto, /*setIsEditingPhoto*/] = React.useTransition()
 
   function handleDeletePhoto() {
     setIsDeletingPhoto(async () => {
       await deletePhoto(photo!.id);
     })
   }
+
+  /*function handleEditPhoto() {
+    setIsEditingPhoto(async () => {
+      await editPhoto(photo!.id, {
+        title: "Novo título da foto",
+      });
+    })
+  }*/
 
   if (!isLoadingAlbums && !photo) {
     return <div>Foto não encontra!</div>
@@ -59,11 +69,29 @@ export default function PagePhotoDetails() {
           )}
 
           {!isLoadingPhoto ? (
-            <Button variant="destructive" onClick={handleDeletePhoto} disabled={isDeletingPhoto}>{isDeletingPhoto ? "Excluindo..." : "Excluir"}</Button>
+            <div className="flex gap-3">
+              <Button
+                variant="destructive"
+                onClick={handleDeletePhoto}
+                disabled={isDeletingPhoto}>
+                {isDeletingPhoto ? "Excluindo..." : "Excluir"}
+              </Button>
+
+              <PhotoEditDialog
+                trigger={
+                  <Button
+                    variant="edit"
+                    disabled={isEditingPhoto}>
+                    {isEditingPhoto ? <></> : "Editar"}
+                  </Button>
+                }
+              />
+            </div>
           ) : (
-            <Skeleton
-              className="w-20 h-10"
-            />
+            <>
+              <Skeleton className="w-20 h-10" />
+              <Skeleton className="w-20 h-10" />
+            </>
           )}
         </div>
 
