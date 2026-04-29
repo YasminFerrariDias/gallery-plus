@@ -3,7 +3,9 @@ import Skeleton from "../../../components/skeleton";
 import Text from "../../../components/text";
 import usePhotos from "../../photos/hooks/use-photos";
 import type { Album } from "../models/album";
+import SpinnerIcon from "../../../assets/icons/spinner.svg?react";
 import cx from "classnames"
+import Icon from "../../../components/icon";
 
 interface AlbumsFilterProps extends React.ComponentProps<"div"> {
   albums: Album[];
@@ -35,7 +37,14 @@ export default function AlbumsFilter({ albums, loading, className, ...props }: A
                 className="cursor-pointer"
                 onClick={() => filters.setAlbumId(album.id)}
               >
-                {album.title}
+                <div>
+                  <span>{album.title}</span>
+                  
+                    <div>
+                      <Icon svg={SpinnerIcon} className="w-4 h-4" />
+                    </div>
+                 
+                </div>
               </Button>
             ))}</>
         ) : (
