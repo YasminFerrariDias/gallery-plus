@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetcher } from "../../../helpers/api";
-import type { Photo } from "../models/foto";
+import type { Photo } from "../models/photo";
 import { useQueryState, createSerializer, parseAsString } from "nuqs";
 
 const toSearchParams = createSerializer({
@@ -14,7 +14,7 @@ export default function usePhotos() {
 
   const { data, isLoading } = useQuery<Photo[]>({
     queryKey: ['photos', albumId, q],
-    queryFn: () => fetcher(`/photos${toSearchParams({albumId, q})}`),
+    queryFn: () => fetcher(`/photos${toSearchParams({ albumId, q })}`),
   });
 
   return {

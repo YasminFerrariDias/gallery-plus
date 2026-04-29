@@ -2,7 +2,7 @@ import Divider from "../../../components/divider";
 import InputCheckbox from "../../../components/input-checkbox";
 import Skeleton from "../../../components/skeleton";
 import Text from "../../../components/text";
-import type { Photo } from "../../photos/models/foto";
+import type { Photo } from "../../photos/models/photo";
 import type { Album } from "../models/album";
 
 interface AlbumsListSelectableProps {

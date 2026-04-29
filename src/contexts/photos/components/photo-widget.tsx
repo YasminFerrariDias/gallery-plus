@@ -4,7 +4,7 @@ import { buttonTextVariants, buttonVariants } from "../../../components/button";
 import ImagePreview from "../../../components/image-preview";
 import Skeleton from "../../../components/skeleton";
 import Text from "../../../components/text";
-import type { Photo } from "../models/foto";
+import type { Photo } from "../models/photo";
 
 interface PhotoWidgetProps {
   photo: Photo;

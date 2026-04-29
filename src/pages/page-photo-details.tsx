@@ -7,8 +7,8 @@ import ImagePreview from "../components/image-preview";
 import Button from "../components/button";
 import AlbumsListSelectable from "../contexts/albums/components/albums-list-selectable";
 import useAlbums from "../contexts/albums/hooks/use-albums";
-import usePhoto from "../contexts/photos/hooks/use.photo";
-import type { Photo } from "../contexts/photos/models/foto";
+import usePhoto from "../contexts/photos/hooks/use-photo";
+import type { Photo } from "../contexts/photos/models/photo";
 
 export default function PagePhotoDetails() {
   const { id } = useParams();
