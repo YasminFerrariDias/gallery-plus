@@ -12,7 +12,7 @@ import type { Photo } from "../contexts/photos/models/foto";
 
 export default function PagePhotoDetails() {
   const { id } = useParams();
-  const { photo, isLoadingPhoto } = usePhoto(id)
+  const { photo, previousPhotoId, nextPhotoId, isLoadingPhoto } = usePhoto(id)
   const { albums, isLoadingAlbums } = useAlbums();
 
   if (!isLoadingAlbums && !photo) {
@@ -28,7 +28,11 @@ export default function PagePhotoDetails() {
           <Skeleton className="w-48 h-8" />
         )}
 
-        <PhotosNavigator loading={isLoadingPhoto} />
+        <PhotosNavigator
+          previousPhotoId={previousPhotoId}
+          nextPhotoId={nextPhotoId}
+          loading={isLoadingPhoto}
+        />
       </header>
 
       <div className="grid grid-cols-[21rem_1fr] gap-24">
@@ -36,7 +40,7 @@ export default function PagePhotoDetails() {
 
           {!isLoadingPhoto ? (
             <ImagePreview
-              src={`{${import.meta.env.VITE_IMAGES_URL}/${photo?.imageId}`}
+              src={`${import.meta.env.VITE_IMAGES_URL}/${photo?.imageId}`}
               title={photo?.title}
               imageClassName="h-[21rem]"
             />
