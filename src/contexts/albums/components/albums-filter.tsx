@@ -5,6 +5,7 @@ import usePhotos from "../../photos/hooks/use-photos";
 import type { Album } from "../models/album";
 import { BiCog } from "react-icons/bi";
 import cx from "classnames";
+import AlbumEditDialog from "./album-edit-dialog";
 
 interface AlbumsFilterProps extends React.ComponentProps<"div"> {
   albums: Album[];
@@ -40,15 +41,20 @@ export default function AlbumsFilter({ albums, loading, className, ...props }: A
               >
                 <span>{album.title}</span>
                 {filters.albumId === album.id && (
-                  <Button
-                    key={album.id}
-                    icon={BiCog}
-                    className=
-                    {filters.albumId === album.id
-                      ? "bg-accent-brand-light hover:bg-accent-brand ml-0 pr-2 pl-1"
-                      : "ml-0 pr-2 pl-1"
+                  <AlbumEditDialog
+                    albumId={album.id}
+                    trigger={
+                      <Button
+                        key={album.id}
+                        icon={BiCog}
+                        size="sm"
+                        className=
+                        {filters.albumId === album.id
+                          ? "bg-accent-brand-light hover:bg-accent-brand ml-0 pr-2 pl-1"
+                          : "ml-0 pr-2 pl-1"
+                        }
+                      />
                     }
-                    size="sm"
                   />
                 )}
               </div>

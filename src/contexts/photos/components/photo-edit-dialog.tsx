@@ -76,7 +76,6 @@ export default function PhotoEditDialog({ trigger }: PhotoNewDialogProps) {
 
             <ImagePreview
               src={`${import.meta.env.VITE_IMAGES_URL}/${photo?.imageId}`}
-              title={photo?.title}
               className='w-full h-56'
             />
           </DialogBody>

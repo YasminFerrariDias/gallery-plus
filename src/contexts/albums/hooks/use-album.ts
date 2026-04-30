@@ -1,12 +1,22 @@
 import { toast } from "sonner";
 import type { AlbumNewFormSchema } from "../schemas";
-import { api } from "../../../helpers/api";
+import { api, fetcher } from "../../../helpers/api";
 import type { Album } from "../models/album";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import usePhotos from "../../photos/hooks/use-photos";
 import usePhotoAlbums from "../../photos/hooks/use-photo-albums";
+import { useNavigate } from "react-router";
 
-export default function useAlbum() {
+interface AlbumDetailsResponse extends Album {}
+
+export default function useAlbum(id?: string) {
+  const navigate = useNavigate()
+  const { data } = useQuery<AlbumDetailsResponse>({
+    queryKey: ["album", id],
+    queryFn: () => fetcher(`/albums/${id}`),
+    enabled: !!id,
+  })
+
   const queryClient = useQueryClient();
   const { photos } = usePhotos();
   const { managePhotoOnAlbum } = usePhotoAlbums()
@@ -39,7 +49,24 @@ export default function useAlbum() {
       throw error;
     }
   }
+
+  async function deleteAlbum(albumId: string) {
+    try {
+      await api.delete(`/albums/${albumId}`)
+
+      queryClient.invalidateQueries({ queryKey: ["albums"]})
+
+      toast.success("Álbum excluído com sucesso")
+      navigate("/")
+    } catch (error) {
+      toast.error("Erro ao excluir álbum");
+      throw error;
+    }
+  }
+
   return {
+    album: data,
     createAlbum,
+    deleteAlbum,
   }
 }
