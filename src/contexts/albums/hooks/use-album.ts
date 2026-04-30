@@ -17,7 +17,7 @@ export default function useAlbum(id?: string) {
   const { managePhotoOnAlbum } = usePhotoAlbums()
 
   const queryClient = useQueryClient();
-  const { data } = useQuery<AlbumDetailsResponse>({
+  const { data, isLoading } = useQuery<AlbumDetailsResponse>({
     queryKey: ["album", id],
     queryFn: () => fetcher(`/albums/${id}`),
     enabled: !!id,
@@ -68,10 +68,33 @@ export default function useAlbum(id?: string) {
     }
   }
 
+  async function editAlbum(albumId: string, data: { title?: string }) {
+    try {
+      await api.patch(`/albums/${albumId}`, data)
+      queryClient.setQueryData<AlbumDetailsResponse>(
+        ["album", albumId],
+        (oldData) => {
+          if (!oldData) return oldData
+          return {
+            ...oldData,
+            ...data
+          }
+        }
+      )
+
+      toast.success("Álbum editado com sucesso")
+    } catch (error) {
+      toast.error("Erro ao editar álbum");
+      throw error;
+    }
+  }
+
   return {
     album: data,
     albumPhotosIds,
+    isLoadingPhoto: isLoading,
     createAlbum,
     deleteAlbum,
+    editAlbum,
   }
 }

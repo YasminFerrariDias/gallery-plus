@@ -5,13 +5,13 @@ import InputText from "../../../components/input-text";
 import Text from "../../../components/text";
 import SelectCheckboxIllustration from "../../../assets/images/select-checkbox.svg?react"
 import Skeleton from "../../../components/skeleton";
-import PhotoImageSelectable from "../../photos/components/photo-image-selectable";
 import usePhotos from "../../photos/hooks/use-photos";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import useAlbum from "../hooks/use-album";
 import { albumEditFormSchema, type AlbumEditFormSchema } from "../schemas-edit";
 import ImagePreview from "../../../components/image-preview";
+import { toast } from "sonner";
 
 interface AlbumEditDialogProps {
   trigger: React.ReactNode;
@@ -23,14 +23,15 @@ export default function AlbumEditDialog({ trigger, albumId }: AlbumEditDialogPro
   const [modalOpen, setModalOpen] = React.useState(false)
 
   const { photos, isLoadingPhotos } = usePhotos()
-  const { album, deleteAlbum, albumPhotosIds } = useAlbum(albumId)
 
-  // Memoize albumPhotosIds to prevent infinite loop
+  const { album, deleteAlbum, albumPhotosIds, editAlbum } = useAlbum(albumId)
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const stableAlbumPhotosIds = React.useMemo(() => albumPhotosIds, [album?.id, album?.photos])
 
+  const [isEditingAlbum, setIsEditingAlbum] = React.useTransition()
   const [idDeletingAlbum, setIsDeletingAlbum] = React.useTransition()
-  const [isCreatingAlbum, ] = React.useTransition();
-  
+
   const form = useForm<AlbumEditFormSchema>({
     resolver: zodResolver(albumEditFormSchema)
   });
@@ -39,31 +40,21 @@ export default function AlbumEditDialog({ trigger, albumId }: AlbumEditDialogPro
     if (modalOpen && album) {
       form.reset({
         title: album.title,
-        photosIds: stableAlbumPhotosIds 
+        photosIds: stableAlbumPhotosIds
       })
     }
   }, [modalOpen, album, stableAlbumPhotosIds, form])
 
   function handleDeleteAlbum() {
     if (!album) {
-    console.error("Álbum não encontrado");
-    return;
-  }
+      console.error("Álbum não encontrado");
+      return;
+    }
     setIsDeletingAlbum(async () => {
       await deleteAlbum(album.id)
       setModalOpen(false)
     })
   }
-
-
- /* function handleSubmit(payload: AlbumNewFormSchema) {
-    setIsCreatingAlbum(async () => {
-      
-      const changedData: any = {} 
-
-      setModalOpen(false)
-    })
-  }*/
 
   React.useEffect(() => {
     if (!modalOpen) {
@@ -71,13 +62,36 @@ export default function AlbumEditDialog({ trigger, albumId }: AlbumEditDialogPro
     }
   }, [modalOpen, form])
 
+  function handleSubmit(payload: AlbumEditFormSchema) {
+    const changedData: Partial<AlbumEditFormSchema> = {}
+
+    if (!albumId) {
+      toast.error("ID da álbum não encontrado");
+      return
+    }
+
+    if (payload.title !== album?.title) {
+      changedData.title = payload.title
+    }
+
+    if (Object.keys(changedData).length === 0) {
+      setModalOpen(false)
+      return
+    }
+
+    setIsEditingAlbum(async () => {
+      await editAlbum(albumId, changedData);
+      setModalOpen(false)
+    })
+  }
+
   return (
     <Dialog open={modalOpen} onOpenChange={setModalOpen}>
       <DialogTrigger asChild>
         {trigger}
       </DialogTrigger>
       <DialogContent>
-        <form /*onSubmit={form.handleSubmit(handleSubmit)}*/>
+        <form onSubmit={form.handleSubmit(handleSubmit)}>
           <DialogHeader>Editar álbum</DialogHeader>
 
           <DialogBody className="flex flex-col gap-5">
@@ -91,7 +105,7 @@ export default function AlbumEditDialog({ trigger, albumId }: AlbumEditDialogPro
                 Fotos cadastradas
               </Text>
 
-            {!isLoadingPhotos && photos.length > 0 && (
+              {!isLoadingPhotos && photos.length > 0 && (
                 <div className="flex flex-wrap gap-2">
                   {photos.map(photo => (
                     <ImagePreview
@@ -127,7 +141,7 @@ export default function AlbumEditDialog({ trigger, albumId }: AlbumEditDialogPro
 
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="secondary" disabled={isCreatingAlbum}>Cancelar</Button>
+              <Button variant="secondary" disabled={isEditingAlbum}>Cancelar</Button>
             </DialogClose>
 
             <Button
@@ -138,9 +152,9 @@ export default function AlbumEditDialog({ trigger, albumId }: AlbumEditDialogPro
             </Button>
             <Button
               type="submit"
-              disabled={isCreatingAlbum}
-              handling={isCreatingAlbum}>
-              {isCreatingAlbum ? "Salvando..." : "Salvar"}
+              disabled={isEditingAlbum}
+              handling={isEditingAlbum}>
+              {isEditingAlbum ? "Salvando..." : "Salvar"}
             </Button>
           </DialogFooter>
         </form>
