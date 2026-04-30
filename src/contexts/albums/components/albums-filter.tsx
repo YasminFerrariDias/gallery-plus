@@ -1,11 +1,10 @@
-import Button from "../../../components/button";
+import Button, { buttonVariants } from "../../../components/button";
 import Skeleton from "../../../components/skeleton";
 import Text from "../../../components/text";
 import usePhotos from "../../photos/hooks/use-photos";
 import type { Album } from "../models/album";
-import SpinnerIcon from "../../../assets/icons/spinner.svg?react";
-import cx from "classnames"
-import Icon from "../../../components/icon";
+import { BiCog } from "react-icons/bi";
+import cx from "classnames";
 
 interface AlbumsFilterProps extends React.ComponentProps<"div"> {
   albums: Album[];
@@ -24,29 +23,37 @@ export default function AlbumsFilter({ albums, loading, className, ...props }: A
             <Button
               variant={filters.albumId === null ? 'primary' : 'ghost'}
               size="sm"
-              className="cursor-pointer"
+              className="cursor-pointer flex between"
               onClick={() => filters.setAlbumId(null)}
             >
               Todos
             </Button>
             {albums.map((album) => (
-              <Button
+              <div
                 key={album.id}
-                variant={filters.albumId === album.id ? 'primary' : 'ghost'}
-                size="sm"
-                className="cursor-pointer"
+                className={`${buttonVariants({
+                  variant: filters.albumId === album.id ? 'primary' : 'ghost',
+                  size: 'sm',
+                  className: filters.albumId === album.id ? 'pr-0' : 'ghost'
+                })} cursor-pointer`}
                 onClick={() => filters.setAlbumId(album.id)}
               >
-                <div>
-                  <span>{album.title}</span>
-                  
-                    <div>
-                      <Icon svg={SpinnerIcon} className="w-4 h-4" />
-                    </div>
-                 
-                </div>
-              </Button>
-            ))}</>
+                <span>{album.title}</span>
+                {filters.albumId === album.id && (
+                  <Button
+                    key={album.id}
+                    icon={BiCog}
+                    className=
+                    {filters.albumId === album.id
+                      ? "bg-accent-brand-light hover:bg-accent-brand ml-0 pr-2 pl-1"
+                      : "ml-0 pr-2 pl-1"
+                    }
+                    size="sm"
+                  />
+                )}
+              </div>
+            ))}
+          </>
         ) : (
           Array.from({ length: 5 }).map((_, index) => (
             <Skeleton className="w-28 h-7" key={`album-button-loading-${index}`} />))
