@@ -8,9 +8,9 @@ import Skeleton from "../../../components/skeleton";
 import PhotoImageSelectable from "../../photos/components/photo-image-selectable";
 import usePhotos from "../../photos/hooks/use-photos";
 import { useForm } from "react-hook-form";
-import { albumNewFormSchema, type AlbumNewFormSchema } from "../schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import useAlbum from "../hooks/use-album";
+import { albumEditFormSchema, type AlbumEditFormSchema } from "../schemas-edit";
 
 interface AlbumEditDialogProps {
   trigger: React.ReactNode;
@@ -22,14 +22,26 @@ export default function AlbumEditDialog({ trigger, albumId }: AlbumEditDialogPro
   const [modalOpen, setModalOpen] = React.useState(false)
 
   const { photos, isLoadingPhotos } = usePhotos()
-  const { album, deleteAlbum } = useAlbum(albumId)
+  const { album, deleteAlbum, albumPhotosIds } = useAlbum(albumId)
+
+  // Memoize albumPhotosIds to prevent infinite loop
+  const stableAlbumPhotosIds = React.useMemo(() => albumPhotosIds, [album?.id, album?.photos])
 
   const [idDeletingAlbum, setIsDeletingAlbum] = React.useTransition()
-  const [isCreatingAlbum, setIsCreatingAlbum] = React.useTransition();
+  const [isCreatingAlbum, ] = React.useTransition();
   
-  const form = useForm<AlbumNewFormSchema>({
-    resolver: zodResolver(albumNewFormSchema)
+  const form = useForm<AlbumEditFormSchema>({
+    resolver: zodResolver(albumEditFormSchema)
   });
+
+  React.useEffect(() => {
+    if (modalOpen && album) {
+      form.reset({
+        title: album.title,
+        photosIds: stableAlbumPhotosIds 
+      })
+    }
+  }, [modalOpen, album, stableAlbumPhotosIds, form])
 
   function handleDeleteAlbum() {
     if (!album) {
@@ -43,7 +55,8 @@ export default function AlbumEditDialog({ trigger, albumId }: AlbumEditDialogPro
   }
 
   function handleTogglePhoto(selected: boolean, photoId: string) {
-    const photosIds = form.getValues('photosIds') || [];
+    const currentValue = form.getValues('photosIds') || [];
+    const photosIds = Array.isArray(currentValue) ? currentValue : []
     let newValue = [];
 
     if (selected) {
@@ -55,12 +68,14 @@ export default function AlbumEditDialog({ trigger, albumId }: AlbumEditDialogPro
     form.setValue("photosIds", newValue)
   }
 
-  function handleSubmit(payload: AlbumNewFormSchema) {
+ /* function handleSubmit(payload: AlbumNewFormSchema) {
     setIsCreatingAlbum(async () => {
-      await (payload);
+      
+      const changedData: any = {} 
+
       setModalOpen(false)
     })
-  }
+  }*/
 
   React.useEffect(() => {
     if (!modalOpen) {
@@ -70,9 +85,11 @@ export default function AlbumEditDialog({ trigger, albumId }: AlbumEditDialogPro
 
   return (
     <Dialog open={modalOpen} onOpenChange={setModalOpen}>
-      <DialogTrigger asChild>{trigger}</DialogTrigger>
+      <DialogTrigger asChild>
+        {trigger}
+      </DialogTrigger>
       <DialogContent>
-        <form onSubmit={form.handleSubmit(handleSubmit)}>
+        <form /*onSubmit={form.handleSubmit(handleSubmit)}*/>
           <DialogHeader>Editar álbum</DialogHeader>
 
           <DialogBody className="flex flex-col gap-5">
@@ -94,7 +111,6 @@ export default function AlbumEditDialog({ trigger, albumId }: AlbumEditDialogPro
                       src={`${import.meta.env.VITE_IMAGES_URL}/${photo.imageId}`}
                       title={photo.title}
                       imageClassName="w-20 h-20"
-                      onSelectImage={(selected) => handleTogglePhoto(selected, photo.id)}
                     />))}
                 </div>
               )}

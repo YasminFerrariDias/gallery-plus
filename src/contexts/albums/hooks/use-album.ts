@@ -6,20 +6,24 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import usePhotos from "../../photos/hooks/use-photos";
 import usePhotoAlbums from "../../photos/hooks/use-photo-albums";
 import { useNavigate } from "react-router";
+import type { Photo } from "../../photos/models/photo";
 
-interface AlbumDetailsResponse extends Album {}
+interface AlbumDetailsResponse extends Album { }
 
 export default function useAlbum(id?: string) {
   const navigate = useNavigate()
+
+  const { photos } = usePhotos();
+  const { managePhotoOnAlbum } = usePhotoAlbums()
+
+  const queryClient = useQueryClient();
   const { data } = useQuery<AlbumDetailsResponse>({
     queryKey: ["album", id],
     queryFn: () => fetcher(`/albums/${id}`),
     enabled: !!id,
   })
 
-  const queryClient = useQueryClient();
-  const { photos } = usePhotos();
-  const { managePhotoOnAlbum } = usePhotoAlbums()
+  const albumPhotosIds = data?.photos?.map((photo: Photo) => photo.id) || [];
 
   async function createAlbum(payload: AlbumNewFormSchema) {
     try {
@@ -54,7 +58,7 @@ export default function useAlbum(id?: string) {
     try {
       await api.delete(`/albums/${albumId}`)
 
-      queryClient.invalidateQueries({ queryKey: ["albums"]})
+      queryClient.invalidateQueries({ queryKey: ["albums"] })
 
       toast.success("Álbum excluído com sucesso")
       navigate("/")
@@ -66,6 +70,7 @@ export default function useAlbum(id?: string) {
 
   return {
     album: data,
+    albumPhotosIds,
     createAlbum,
     deleteAlbum,
   }
