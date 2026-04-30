@@ -11,6 +11,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import useAlbum from "../hooks/use-album";
 import { albumEditFormSchema, type AlbumEditFormSchema } from "../schemas-edit";
+import ImagePreview from "../../../components/image-preview";
 
 interface AlbumEditDialogProps {
   trigger: React.ReactNode;
@@ -54,19 +55,6 @@ export default function AlbumEditDialog({ trigger, albumId }: AlbumEditDialogPro
     })
   }
 
-  function handleTogglePhoto(selected: boolean, photoId: string) {
-    const currentValue = form.getValues('photosIds') || [];
-    const photosIds = Array.isArray(currentValue) ? currentValue : []
-    let newValue = [];
-
-    if (selected) {
-      newValue = [...photosIds, photoId]
-    } else {
-      newValue = photosIds.filter((id) => id !== photoId)
-    }
-
-    form.setValue("photosIds", newValue)
-  }
 
  /* function handleSubmit(payload: AlbumNewFormSchema) {
     setIsCreatingAlbum(async () => {
@@ -106,7 +94,7 @@ export default function AlbumEditDialog({ trigger, albumId }: AlbumEditDialogPro
             {!isLoadingPhotos && photos.length > 0 && (
                 <div className="flex flex-wrap gap-2">
                   {photos.map(photo => (
-                    <PhotoImageSelectable
+                    <ImagePreview
                       key={photo.id}
                       src={`${import.meta.env.VITE_IMAGES_URL}/${photo.imageId}`}
                       title={photo.title}
