@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "start": "node server/dist/main.js",
     "build": "pnpm build-server && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
