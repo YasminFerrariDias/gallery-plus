@@ -19,25 +19,9 @@ Aplicação fullstack de galeria de imagens desenvolvida com React, TypeScript e
 - Back-end próprio com API REST
 - Coleção Postman incluída para teste das rotas
 
-## Como Executar
-
-\`\`\`bash
-pnpm install
-
-# Em terminais separados:
-pnpm dev-server   # inicia o back-end
-pnpm dev          # inicia o front-end
-\`\`\`
-
 ## Deploy
 
-- Front-end: [Galeria+](https://gallery-plus-git-main-yassfdias-8108s-projects.vercel.app/) (Vercel)
+- Front-end: [Acessar o site](https://gallery-plus-git-main-yassfdias-8108s-projects.vercel.app/)
 - Back-end: hospedado no Render (plano gratuito)
 
 > ⚠️ O back-end fica no plano gratuito do Render, que "dorme" após períodos de inatividade — a primeira requisição do dia pode levar até ~50 segundos para responder.
-
-## Sobre
-
-Projeto fullstack desenvolvido para praticar a integração entre front-end em React e back-end em Node.js com TypeScript, incluindo deploy separado de front-end e back-end.
-
-> Desenvolvido por **Yasmin Ferrari Dias** 🚀
